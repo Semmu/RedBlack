@@ -1,3 +1,9 @@
+# custom rules
+main
+bin/
+build/
+.release_time
+
 # Created by https://www.gitignore.io
 
 ### C++ ###
