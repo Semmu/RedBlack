@@ -7,7 +7,7 @@ template <typename T>
 class RedBlack
 {
 	std::shared_ptr<T> data;
-	std::shared_ptr<RedBlack> child_left, child_right;
+	std::unique_ptr<RedBlack> child_left, child_right;
 	std::weak_ptr<RedBlack> parent;
 
 	enum {
