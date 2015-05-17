@@ -26,6 +26,36 @@ std::ostream& operator << (std::ostream& os, const SomethingDynamic& var)
 
 int main()
 {
+	double pi = 3.14159365;
+
+	RedBlack<double> tree(pi);
+
+	/*std::cout << "pi = " << pi << std::endl
+			  << "&pi = " << &pi << std::endl
+			  << "&tree = " << &tree << std::endl
+			  << "&tree.root.get()->data = " << &(tree.root.get()->data) << std::endl
+			  << "data = " << tree.root.get()->data;*/
+
+	double e = 2.72;
+	tree.add(e);
+
+	double five = 5.0;
+	tree.add(five);
+
+	double three = 3.0;
+	tree.add(three);
+
+	tree.traverse([](const double& d) {
+		std::cout << d << ", ";
+	}, RedBlack<double>::INORDER);
+
+	tree.debugDump();
+
+	std::cout << std::endl;
+
+
+
+
 /*
 		      .                               .
 		o     |            ,-                 |         o
@@ -35,7 +65,7 @@ int main()
 		                  -'                              `-'
 */
 
-	std::vector<int> v_ints({8, 3, 5, 2, 6});
+/*	std::vector<int> v_ints({8, 3, 5, 2, 6});
 	// static construct method to create a tree from an existing container
 	// does not take away resources
 //	RedBlack<int> rb_ints = RedBlack::copy_from(v_ints.begin(), v_ints.end());
@@ -80,8 +110,8 @@ int main()
 	rbX.remove(SomeClass& node);
 
 	// calling a function on every node
-	rbY.traverse([](SomeClass& node) {std::cout << node.data << std::endl; }, INORDER | PREORDER | POSTORDER);
+	rbY.traverse([](SomeClass& node) {std::cout << node.data << std::endl; }, INORDER );
 
-
+*/
 	return 0;
 }
