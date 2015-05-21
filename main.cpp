@@ -26,28 +26,25 @@ std::ostream& operator << (std::ostream& os, const SomethingDynamic& var)
 
 int main()
 {
-	double pi = 3.14159365;
+	double d1 = 1,
+		   d2 = 2,
+		   d3 = 3,
+		   d4 = 4,
+		   d5 = 5,
+		   d6 = 6,
+		   d7 = 7;
 
-	RedBlack<double> tree(pi);
-
-	/*std::cout << "pi = " << pi << std::endl
-			  << "&pi = " << &pi << std::endl
-			  << "&tree = " << &tree << std::endl
-			  << "&tree.root.get()->data = " << &(tree.root.get()->data) << std::endl
-			  << "data = " << tree.root.get()->data;*/
-
-	double e = 2.72;
-	tree.add(e);
-
-	double five = 5.0;
-	tree.add(five);
-
-	double three = 3.0;
-	tree.add(three);
+	RedBlack<double> tree(d4);
+	tree.add(d2);
+	tree.add(d6);
+	tree.add(d5);
+	tree.add(d7);
+	tree.add(d3);
+	tree.add(d1);
 
 	tree.traverse([](const double& d) {
 		std::cout << d << ", ";
-	}, RedBlack<double>::INORDER);
+	}, RedBlack<double>::TraverseMode::INORDER); // TODO ezt lehet rövidíteni?
 
 	tree.debugDump();
 

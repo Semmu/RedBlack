@@ -11,12 +11,12 @@ class RedBlack
 public:
 	using Comparator = std::function<bool(const T&, const T&)>;
 	using Callable = std::function<void(const T&)>;
-	enum TraverseMode {PREORDER, INORDER, POSTORDER};
+	enum class TraverseMode {PREORDER, INORDER, POSTORDER};
 
 	class Node
 	{
 	public:
-		enum ColorType {RED, BLACK} color;
+		enum class ColorType {RED, BLACK} color;
 
 		T& data;
 
@@ -24,13 +24,13 @@ public:
 		std::unique_ptr<Node> child_left,
 							  child_right;
 
-		Node(T& d, ColorType c = RED) : color(c), data(d) {}
+		Node(T& d, ColorType c = ColorType::RED) : color(c), data(d) {}
 	};
 
 	std::unique_ptr<Node> root;
 	Comparator comparator;
 
-	RedBlack(T& data, Comparator comp = Comparator(std::less<T>())) : root(new Node(data, Node::BLACK)), comparator(comp) {}
+	RedBlack(T& data, Comparator comp = Comparator(std::less<T>())) : root(new Node(data, Node::ColorType::BLACK)), comparator(comp) {}
 	RedBlack(const RedBlack& rb) = delete; // TODO kell?
 	RedBlack(RedBlack&& rb)
 	{
@@ -43,8 +43,14 @@ public:
 
 	Node& add(T& d)
 	{
-		// TODO mi van, ha már létezik d a fában?
 		Node& parent = search(d);
+
+		// TODO mi van, ha már létezik d a fában?
+		// ez így jó?
+		// visszatérek egy olyan Node-al, ami azonos értékű T-t tárol, de nem feltétlenül egyezik meg a két hivatkozott objektum
+		if (parent.data == d)
+			return parent;
+
 		Node* newNode = new Node(d);
 		if (comparator(parent.data, d))
 		{
@@ -101,7 +107,7 @@ public:
 		return *iterator;
 	}
 
-	void traverse(Callable func, const TraverseMode mode = INORDER)
+	void traverse(Callable func, const TraverseMode mode = TraverseMode::INORDER)
 	{
 		traverseRecursive(*(root.get()), func, mode);
 	}
@@ -114,32 +120,46 @@ public:
 private:
 	void traverseRecursive(Node& node, Callable func, const TraverseMode mode)
 	{
-		if (mode == PREORDER)
+		if (mode == TraverseMode::PREORDER)
 			func(node.data);
 
 		if (node.child_left)
 			traverseRecursive(*(node.child_left.get()), func, mode);
 
-		if (mode == INORDER)
+		if (mode == TraverseMode::INORDER)
 			func(node.data);
 
 		if (node.child_right)
 			traverseRecursive(*(node.child_right.get()), func, mode);
 
-		if (mode == POSTORDER)
+		if (mode == TraverseMode::POSTORDER)
 			func(node.data);
 	}
 
 	void debugDumpRecursive(const Node* node, size_t level)
 	{
 		if(node->child_right)
+		{
+			std::cout << std::endl;
 			debugDumpRecursive(node->child_right.get(), level + 1);
-		std::cout << std::endl;
+			std::cout << std::endl;
+			for(size_t i = 0; i < level; i++)
+				std::cout << "    ";
+			std::cout << "   /" << std::endl;
+		}
+
 		for(size_t i = 0; i < level; i++)
-			std::cout << "  ";
-		std::cout << node->data;
+			std::cout << "    ";
+		std::cout << '[' << (node->color == Node::ColorType::RED ? 'R' : 'b') << "] " << node->data;
+
 		if(node->child_left)
+		{
+			std::cout << std::endl;
+			for(size_t i = 0; i < level; i++)
+				std::cout << "    ";
+			std::cout << "   \\" << std::endl;
 			debugDumpRecursive(node->child_left.get(), level + 1);
+		}
 
 	}
 };
