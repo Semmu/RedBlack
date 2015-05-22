@@ -45,27 +45,38 @@ public:
 
 	Node& add(T& d)
 	{
-		Node& parent = search(d);
+		auto parent = search(d);
+		std::shared_ptr<Node> newNode(new Node(d));
+		if (comparator(parent.get()->data, d))
+			parent.get()->child_right = newNode;
+		else
+			parent.get()->child_left = newNode;
+
+		newNode.get()->parent = parent;
+
+		return *newNode;
+
+/*		auto parent = search(d);
 
 		// TODO mi van, ha már létezik d a fában?
 		// ez így jó?
 		// visszatérek egy olyan Node-al, ami azonos értékű T-t tárol, de nem feltétlenül egyezik meg a két hivatkozott objektum
 		/*if (parent.data == d)
-			return parent;*/
+			return parent;
 
-		Node* newNode = new Node(d);
+		auto newNode = std::shared_ptr<Node>(new Node(d));
 
 		// szivat ez a sor :(
-		 newNode->parent = std::shared_ptr<Node>(&parent);
-		if (comparator(parent.data, d))
-			parent.child_right.reset(newNode);
+//		newNode.get()->parent = parent;
+		if (comparator(parent.get()->data, d))
+			parent.get()->child_right = newNode;
 		else
-			newNode->parent = std::shared_ptr<Node>(&parent);
+			parent.get()->child_left = newNode;
 
-		return *newNode;
+		return *(newNode.get());*/
 	}
 
-	void rotate(Node& n, RotationDirection dir)
+	/*void rotate(Node& n, RotationDirection dir)
 	{
 		switch(dir)
 		{
@@ -112,9 +123,9 @@ public:
 			case RotationDirection::RIGHT:
 			break;
 		}
-	}
+	}*/
 
-	Node& search(T& d)
+	std::shared_ptr<Node> search(T& d)
 	{
 		Node* iterator = root.get();
 
@@ -144,7 +155,7 @@ public:
 			}
 		} while (do_continue);
 
-		return *iterator;
+		return std::shared_ptr<Node>(iterator);
 	}
 
 	void traverse(Callable func, const TraverseMode mode = TraverseMode::INORDER)

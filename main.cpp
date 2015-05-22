@@ -40,7 +40,7 @@ int main()
 	tree.add(d4);
 	tree.add(d5);
 	tree.add(d6);
-	tree.add(d7);
+//	tree.add(d7);
 
 	//tree.rotate(tree.search(d4), RedBlack<double>::RotationDirection::LEFT);
 
