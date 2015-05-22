@@ -34,13 +34,15 @@ int main()
 		   d6 = 6,
 		   d7 = 7;
 
-	RedBlack<double> tree(d4);
+	RedBlack<double> tree(d1);
 	tree.add(d2);
-	tree.add(d6);
-	tree.add(d5);
-	tree.add(d7);
 	tree.add(d3);
-	tree.add(d1);
+	tree.add(d4);
+	tree.add(d5);
+	tree.add(d6);
+	tree.add(d7);
+
+	tree.rotate(tree.search(d4), RedBlack<double>::RotationDirection::LEFT);
 
 	tree.traverse([](const double& d) {
 		std::cout << d << ", ";

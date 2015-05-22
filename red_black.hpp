@@ -12,6 +12,7 @@ public:
 	using Comparator = std::function<bool(const T&, const T&)>;
 	using Callable = std::function<void(const T&)>;
 	enum class TraverseMode {PREORDER, INORDER, POSTORDER};
+	enum class RotationDirection {LEFT, RIGHT};
 
 	class Node
 	{
@@ -72,6 +73,48 @@ public:
 		}
 
 		return *newNode;
+	}
+
+	void rotate(Node& n, RotationDirection dir)
+	{
+		switch(dir)
+		{
+			case RotationDirection::LEFT:
+			{
+				Node& root_was = n;
+				Node& root_will_be = *(n.child_right.release());
+
+				Node* to_be_adopted = root_will_be.child_left.release();
+
+				if (auto roots_parent = root_was.parent.lock())
+				{
+					if (roots_parent.get()->child_right.get() == &root_was)
+					{
+						roots_parent.get()->child_right.reset(&root_will_be);
+						root_will_be.parent.reset();
+						root_will_be.parent = roots_parent;
+					}
+				}
+				else
+				{
+					root.reset(&root_will_be);
+					// RedBlack root = root_will_be
+				}
+
+				root_was.parent = &root_will_be;
+				root_will_be.child_left.reset(&root_was);
+
+				if (to_be_adopted)
+				{
+					root_was.child_right.reset(to_be_adopted);
+					to_be_adopted->parent.reset(&root_was);
+				}
+			}
+			break;
+
+			case RotationDirection::RIGHT:
+			break;
+		}
 	}
 
 	Node& search(T& d)
