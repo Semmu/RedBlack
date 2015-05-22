@@ -42,12 +42,12 @@ int main()
 	tree.add(d6);
 	tree.add(d7);
 
-	tree.rotate(tree.search(d4), RedBlack<double>::RotationDirection::LEFT);
+	//tree.rotate(tree.search(d4), RedBlack<double>::RotationDirection::LEFT);
 
-	tree.traverse([](const double& d) {
+/*	tree.traverse([](const double& d) {
 		std::cout << d << ", ";
 	}, RedBlack<double>::TraverseMode::INORDER); // TODO ezt lehet rövidíteni?
-
+*/
 	tree.debugDump();
 
 	std::cout << std::endl;
